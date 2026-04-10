@@ -1,19 +1,3 @@
-/**
- * HDDV Request Form - Google Apps Script
- * 
- * HƯỚNG DẪN CÀI ĐẶT:
- * 1. Tạo Google Sheet mới: https://sheets.new
- * 2. Đặt tên sheet tab đầu tiên là "Responses"
- * 3. Vào Extensions > Apps Script
- * 4. Xoá code mặc định, paste toàn bộ code này vào
- * 5. Bấm Deploy > New deployment
- *    - Select type: Web app
- *    - Execute as: Me
- *    - Who has access: Anyone
- * 6. Copy URL deployment → paste vào file index.html (dòng SCRIPT_URL)
- * 7. Done!
- */
-
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Responses");
@@ -21,7 +5,15 @@ function doPost(e) {
       sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("Responses");
     }
     
-    var data = JSON.parse(e.postData.contents);
+    // Parse data from form POST or fetch
+    var data;
+    if (e.parameter && e.parameter.payload) {
+      data = JSON.parse(e.parameter.payload);
+    } else if (e.postData && e.postData.contents) {
+      data = JSON.parse(e.postData.contents);
+    } else {
+      throw new Error("No data received");
+    }
     
     // Create headers if first row is empty
     if (sheet.getLastRow() === 0) {
@@ -69,8 +61,6 @@ function doPost(e) {
         "Trạng thái"
       ];
       sheet.appendRow(headers);
-      
-      // Format header
       var headerRange = sheet.getRange(1, 1, 1, headers.length);
       headerRange.setFontWeight("bold");
       headerRange.setBackground("#1A1A2E");
@@ -78,7 +68,6 @@ function doPost(e) {
       sheet.setFrozenRows(1);
     }
     
-    // Append data row
     var row = [
       new Date().toLocaleString("vi-VN"),
       data.name || "",
@@ -124,12 +113,10 @@ function doPost(e) {
     ];
     
     sheet.appendRow(row);
-    
-    // Auto-resize columns
     sheet.autoResizeColumns(1, row.length);
     
     return ContentService
-      .createTextOutput(JSON.stringify({ status: "success", message: "Đã lưu thành công!" }))
+      .createTextOutput(JSON.stringify({ status: "success" }))
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {

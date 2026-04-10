@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HDDV Request Form - Ticketbox</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF6B35;
+      --primary-light: #FFF3ED;
+      --primary-dark: #E55A28;
+      --accent: #1A1A2E;
+      --surface: #FFFFFF;
+      --bg: #F7F8FA;
+      --border: #E2E5EA;
+      --border-focus: #FF6B35;
+      --text-primary: #1A1A2E;
+      --text-secondary: #6B7280;
+      --text-muted: #9CA3AF;
+      --success: #10B981;
+      --success-light: #ECFDF5;
+      --danger: #EF4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+      --transition: all 0.2s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+      padding: 32px 24px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .header-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+    }
+    .header h1 {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .header p {
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      background: rgba(255,255,255,0.1);
+      height: 4px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* Form container */
+    .form-container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px 16px 100px;
+    }
+
+    /* Section */
+    .section {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .section:hover {
+      box-shadow: var(--shadow-sm);
+    }
+    .section-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .section-icon.orange { background: #FFF3ED; }
+    .section-icon.blue { background: #EFF6FF; }
+    .section-icon.purple { background: #F3F0FF; }
+    .section-icon.green { background: #ECFDF5; }
+    .section-icon.red { background: #FEF2F2; }
+    .section-icon.gray { background: #F3F4F6; }
+    .section-icon.teal { background: #F0FDFA; }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .section-body {
+      padding: 20px 24px 24px;
+    }
+
+    /* Form fields */
+    .field {
+      margin-bottom: 18px;
+    }
+    .field:last-child { margin-bottom: 0; }
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .field-label .required {
+      color: var(--danger);
+      margin-left: 2px;
+    }
+    .field-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="number"],
+    input[type="date"],
+    input[type="datetime-local"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-primary);
+      background: var(--surface);
+      transition: var(--transition);
+      outline: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    /* Checkbox group */
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+    .checkbox-item:hover {
+      border-color: #D1D5DB;
+      background: #FAFAFA;
+    }
+    .checkbox-item.checked {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .checkbox-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      margin-top: 1px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .checkbox-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .checkbox-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Conditional fields */
+    .conditional {
+      display: none;
+      margin-top: 12px;
+      padding: 16px;
+      background: #F9FAFB;
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--primary);
+      animation: slideDown 0.25s ease;
+    }
+    .conditional.show { display: block; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Multi-select chips */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      padding: 6px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+    .chip:hover { border-color: #D1D5DB; }
+    .chip.selected {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Section group title */
+    .group-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      margin-top: 20px;
+    }
+    .group-title:first-child { margin-top: 0; }
+
+    /* Submit */
+    .submit-section {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 16px 24px;
+      z-index: 100;
+    }
+    .submit-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      flex: 1;
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text-secondary);
+      border: 1.5px solid var(--border);
+    }
+    .btn-secondary:hover { background: #F0F1F3; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 200;
+      transition: top 0.3s ease;
+      box-shadow: var(--shadow-lg);
+    }
+    .toast.show { top: 24px; }
+    .toast.success { background: var(--success); }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .header { padding: 24px 16px; }
+      .header h1 { font-size: 18px; }
+      .section-body { padding: 16px; }
+      .section-header { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-brand">
+      <div class="header-logo">TB</div>
+      <div>
+        <h1>HDDV Request Form</h1>
+        <p>BD &rarr; Marketing Team</p>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="form-container">
+    <form id="hddvForm">
+
+      <!-- PHẦN 1 -->
+      <div class="section" data-section="1">
+        <div class="section-header">
+          <div class="section-icon orange">👤</div>
+          <div>
+            <div class="section-title">Thông tin người gửi</div>
+            <div class="section-subtitle">Ai đang request HDDV?</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label class="field-label">Họ tên <span class="required">*</span></label>
+            <input type="text" name="name" required placeholder="Nguyễn Văn A">
+          </div>
+          <div class="field">
+            <label class="field-label">Team / Phòng ban <span class="required">*</span></label>
+            <select name="team" required>
+              <option value="">Chọn team</option>
+              <option value="BD">BD</option>
+              <option value="Partnership">Partnership</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Email <span class="required">*</span></label>
+            <input type="email" name="email" required placeholder="ten@ticketbox.vn">
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 2 -->
+      <div class="section" data-section="2">
+        <div class="section-header">
+          <div class="section-icon blue">🎪</div>
+          <div>
+            <div class="section-title">Thông tin sự kiện</div>
+            <div class="section-subtitle">Chi tiết về event cần HDDV</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label class="field-label">Tên sự kiện <span class="required">*</span></label>
+            <input type="text" name="eventName" required placeholder="VD: VCT Pacific Stage 1 Finals">
+          </div>
+          <div class="field">
+            <label class="field-label">BTC / Đối tác <span class="required">*</span></label>
+            <input type="text" name="organizer" required placeholder="Tên ban tổ chức">
+          </div>
+          <div class="field">
+            <label class="field-label">Thể loại sự kiện <span class="required">*</span></label>
+            <select name="eventType" required>
+              <option value="">Chọn thể loại</option>
+              <option value="Concert">Concert</option>
+              <option value="Fan meeting">Fan meeting</option>
+              <option value="Kịch">Kịch</option>
+              <option value="Festival">Festival</option>
+              <option value="Thể thao/Esports">Thể thao / Esports</option>
+              <option value="Trải nghiệm">Trải nghiệm</option>
+              <option value="Workshop">Workshop</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Ngày diễn ra sự kiện <span class="required">*</span></label>
+            <input type="text" name="eventDate" required placeholder="VD: 15-17/05/2026">
+            <div class="field-hint">Nhập khoảng ngày nếu nhiều ngày</div>
+          </div>
+          <div class="field">
+            <label class="field-label">Địa điểm</label>
+            <input type="text" name="venue" placeholder="VD: ThiSkyHall Sala, TP.HCM">
+          </div>
+          <div class="field">
+            <label class="field-label">Quy mô (ước tính số vé)</label>
+            <input type="number" name="capacity" placeholder="VD: 5000">
+          </div>
+          <div class="field">
+            <label class="field-label">Mức độ ưu tiên <span class="required">*</span></label>
+            <select name="priority" required>
+              <option value="">Chọn mức độ</option>
+              <option value="Cao">🔴 Cao (Hot event)</option>
+              <option value="Trung bình">🟡 Trung bình</option>
+              <option value="Thấp">🟢 Thấp</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 3 -->
+      <div class="section" data-section="3">
+        <div class="section-header">
+          <div class="section-icon purple">📎</div>
+          <div>
+            <div class="section-title">Materials cần cung cấp</div>
+            <div class="section-subtitle">Link và tài liệu từ BTC</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label class="field-label">Link sự kiện trên Ticketbox <span class="required">*</span></label>
+            <input type="url" name="eventLink" required placeholder="https://ticketbox.vn/event/...">
+          </div>
+          <div class="field">
+            <label class="field-label">Working file (drive/link)</label>
+            <input type="url" name="workingFile" placeholder="Link Google Drive, Figma...">
+            <div class="field-hint">File design, brief từ BTC</div>
+          </div>
+          <div class="field">
+            <label class="field-label">Assets từ BTC (ảnh, video, logo)</label>
+            <input type="url" name="assets" placeholder="Link drive chứa assets">
+          </div>
+          <div class="field">
+            <label class="field-label">Ghi chú đặc biệt từ BTC</label>
+            <textarea name="btcNotes" placeholder="Yêu cầu riêng từ BTC nếu có..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 4 -->
+      <div class="section" data-section="4">
+        <div class="section-header">
+          <div class="section-icon green">🎫</div>
+          <div>
+            <div class="section-title">Hướng dẫn đặt vé</div>
+            <div class="section-subtitle">Các giai đoạn bán vé của sự kiện</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="checkbox-group">
+
+            <!-- 4.1 Presale -->
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="presale" onchange="toggleConditional('presale-detail', this.checked)">
+              <div>
+                <div class="checkbox-label">Presale</div>
+                <div class="checkbox-desc">Mở bán sớm cho nhóm đối tượng riêng</div>
+              </div>
+            </div>
+            <div class="conditional" id="presale-detail">
+              <div class="field">
+                <label class="field-label">Ngày mở Presale</label>
+                <input type="datetime-local" name="presaleDate">
+              </div>
+              <div class="field">
+                <label class="field-label">Đối tượng Presale</label>
+                <input type="text" name="presaleTarget" placeholder="VD: Fan club, thẻ ngân hàng X">
+              </div>
+            </div>
+
+            <!-- 4.2 Early Bird -->
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="earlybird" onchange="toggleConditional('earlybird-detail', this.checked)">
+              <div>
+                <div class="checkbox-label">Early Bird</div>
+                <div class="checkbox-desc">Giá ưu đãi giai đoạn đầu</div>
+              </div>
+            </div>
+            <div class="conditional" id="earlybird-detail">
+              <div class="field">
+                <label class="field-label">Ngày mở Early Bird</label>
+                <input type="datetime-local" name="earlybirdDate">
+              </div>
+              <div class="field">
+                <label class="field-label">Lưu ý về giá Early Bird</label>
+                <input type="text" name="earlybirdPrice" placeholder="VD: Giảm 20% cho 500 vé đầu">
+              </div>
+            </div>
+
+            <!-- 4.3 General Sale -->
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="generalSale" onchange="toggleConditional('general-detail', this.checked)">
+              <div>
+                <div class="checkbox-label">General Sale</div>
+                <div class="checkbox-desc">Mở bán chính thức</div>
+              </div>
+            </div>
+            <div class="conditional" id="general-detail">
+              <div class="field">
+                <label class="field-label">Ngày mở General Sale</label>
+                <input type="datetime-local" name="generalSaleDate">
+              </div>
+            </div>
+
+            <!-- 4.4 Waiting Room -->
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="waitingRoom" onchange="toggleConditional('waiting-detail', this.checked)">
+              <div>
+                <div class="checkbox-label">Phòng chờ (Waiting Room)</div>
+                <div class="checkbox-desc">Cho event traffic cao</div>
+              </div>
+            </div>
+            <div class="conditional" id="waiting-detail">
+              <div class="field">
+                <label class="field-label">Thời gian mở phòng chờ</label>
+                <input type="datetime-local" name="waitingRoomTime">
+              </div>
+            </div>
+
+            <!-- 4.5 Queue -->
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="queue">
+              <div>
+                <div class="checkbox-label">Hàng chờ (Queue System)</div>
+                <div class="checkbox-desc">Xếp hàng tự động khi vào mua</div>
+              </div>
+            </div>
+
+            <!-- 4.6 Gift Ticket -->
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="giftTicket">
+              <div>
+                <div class="checkbox-label">Tặng vé / Gift Ticket</div>
+                <div class="checkbox-desc">BTC cung cấp vé tặng cho MKT</div>
+              </div>
+            </div>
+
+            <!-- 4.7 Payment -->
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="paymentNote" onchange="toggleConditional('payment-detail', this.checked)">
+              <div>
+                <div class="checkbox-label">Lưu ý đặc biệt về phương thức thanh toán</div>
+              </div>
+            </div>
+            <div class="conditional" id="payment-detail">
+              <div class="field">
+                <label class="field-label">Ghi chú chi tiết</label>
+                <textarea name="paymentNoteText" placeholder="VD: Chỉ hỗ trợ VNPAY, không nhận COD..."></textarea>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 5 -->
+      <div class="section" data-section="5">
+        <div class="section-header">
+          <div class="section-icon red">📢</div>
+          <div>
+            <div class="section-title">Yêu cầu từ MKT</div>
+            <div class="section-subtitle">BD cần MKT hỗ trợ những gì?</div>
+          </div>
+        </div>
+        <div class="section-body">
+
+          <div class="group-title">Social Media</div>
+
+          <div class="checkbox-group">
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="fbPost" onchange="toggleConditional('fb-detail', this.checked)">
+              <div>
+                <div class="checkbox-label">Post Facebook Fanpage</div>
+              </div>
+            </div>
+            <div class="conditional" id="fb-detail">
+              <div class="field">
+                <label class="field-label">Số lượng post</label>
+                <input type="number" name="fbPostCount" min="1" placeholder="VD: 3">
+              </div>
+              <div class="field">
+                <label class="field-label">Loại post</label>
+                <div class="chip-group">
+                  <span class="chip" onclick="toggleChip(this)" data-value="Bài bán vé">🎫 Bài bán vé</span>
+                  <span class="chip" onclick="toggleChip(this)" data-value="Hướng dẫn đặt vé">📋 HDĐV</span>
+                  <span class="chip" onclick="toggleChip(this)" data-value="Countdown">⏰ Countdown</span>
+                  <span class="chip" onclick="toggleChip(this)" data-value="Recap">📸 Recap</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="group-title">Trên nền tảng Ticketbox</div>
+
+          <div class="checkbox-group">
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="banner">
+              <div><div class="checkbox-label">Banner Homepage</div></div>
+            </div>
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="pushNotif">
+              <div><div class="checkbox-label">Push Notification (App)</div></div>
+            </div>
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="emailMkt" onchange="toggleConditional('email-detail', this.checked)">
+              <div><div class="checkbox-label">Email MKT</div></div>
+            </div>
+            <div class="conditional" id="email-detail">
+              <div class="field">
+                <label class="field-label">Đối tượng nhận email</label>
+                <input type="text" name="emailTarget" placeholder="VD: Tất cả user, user từng mua vé concert">
+              </div>
+            </div>
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="blogPost">
+              <div><div class="checkbox-label">Blog post</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 6 -->
+      <div class="section" data-section="6">
+        <div class="section-header">
+          <div class="section-icon teal">📅</div>
+          <div>
+            <div class="section-title">Timeline</div>
+            <div class="section-subtitle">Các mốc thời gian quan trọng</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label class="field-label">Ngày muốn MKT bắt đầu triển khai <span class="required">*</span></label>
+            <input type="date" name="startDate" required>
+          </div>
+          <div class="field">
+            <label class="field-label">Deadline hoàn thành HDDV <span class="required">*</span></label>
+            <input type="date" name="deadline" required>
+          </div>
+          <div class="field">
+            <label class="field-label">Ngày mở bán chính thức <span class="required">*</span></label>
+            <input type="datetime-local" name="saleDate" required>
+            <div class="field-hint">Mốc quan trọng nhất</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 7 -->
+      <div class="section" data-section="7">
+        <div class="section-header">
+          <div class="section-icon gray">✅</div>
+          <div>
+            <div class="section-title">Xác nhận</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="checkbox-group">
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="confirmMaterials" required>
+              <div><div class="checkbox-label">Đã gửi đủ materials</div></div>
+            </div>
+            <div class="checkbox-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="confirmAccuracy" required>
+              <div><div class="checkbox-label">Cam kết thông tin chính xác</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Submit bar -->
+  <div class="submit-section">
+    <div class="submit-inner">
+      <button type="button" class="btn btn-secondary" onclick="resetForm()">Xoá form</button>
+      <button type="button" class="btn btn-primary" onclick="submitForm()">📨 Gửi yêu cầu HDDV</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+    const SCRIPT_URL = 'https://script.google.com/a/macros/ticketbox.vn/s/AKfycbyD7u1PjHimSFUR3cZpwZjl5B_ov8R7FTchngmuq6OO5tgyQuUstlogG0W3-W20n46bpw/exec';
+
+    // Toggle checkbox styling
+    function toggleCheck(el) {
+      const cb = el.querySelector('input[type="checkbox"]');
+      if (event.target === cb) {
+        el.classList.toggle('checked', cb.checked);
+        return;
+      }
+      cb.checked = !cb.checked;
+      cb.dispatchEvent(new Event('change'));
+      el.classList.toggle('checked', cb.checked);
+    }
+
+    // Toggle conditional fields
+    function toggleConditional(id, show) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('show', show);
+    }
+
+    // Toggle chip selection
+    function toggleChip(el) {
+      el.classList.toggle('selected');
+      event.stopPropagation();
+    }
+
+    // Progress bar
+    function updateProgress() {
+      const fields = document.querySelectorAll('[required]');
+      let filled = 0;
+      fields.forEach(f => {
+        if (f.type === 'checkbox') { if (f.checked) filled++; }
+        else if (f.value.trim()) filled++;
+      });
+      const pct = Math.round((filled / fields.length) * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      el.addEventListener('input', updateProgress);
+      el.addEventListener('change', updateProgress);
+    });
+
+    // Toast
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + (type || '');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Collect form data
+    function collectData() {
+      const form = document.getElementById('hddvForm');
+      const data = {};
+      const inputs = form.querySelectorAll('input, select, textarea');
+      inputs.forEach(el => {
+        if (el.type === 'checkbox') data[el.name] = el.checked;
+        else data[el.name] = el.value;
+      });
+      // Chips
+      const chips = form.querySelectorAll('.chip.selected');
+      data.postTypes = Array.from(chips).map(c => c.dataset.value);
+      return data;
+    }
+
+    // Submit
+    async function submitForm() {
+      const form = document.getElementById('hddvForm');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const data = collectData();
+      const submitBtn = document.querySelector('.btn-primary');
+      const originalText = submitBtn.textContent;
+
+      // Check if Google Sheets is configured
+      if (!SCRIPT_URL) {
+        showToast('⚠️ Chưa cấu hình Google Sheet! Xem hướng dẫn trong google-apps-script.js', '');
+        return;
+      }
+
+      // Loading state
+      submitBtn.textContent = '⏳ Đang gửi...';
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        // no-cors always returns opaque response, so we assume success
+        showToast('✅ Đã gửi thành công! Data đã lưu vào Google Sheet', 'success');
+
+        // Also copy summary to clipboard as bonus
+        const summary = formatSummary(data);
+        try { await navigator.clipboard.writeText(summary); } catch(e) {}
+
+        // Reset form after success
+        setTimeout(() => {
+          form.reset();
+          document.querySelectorAll('.checkbox-item.checked').forEach(el => el.classList.remove('checked'));
+          document.querySelectorAll('.conditional.show').forEach(el => el.classList.remove('show'));
+          document.querySelectorAll('.chip.selected').forEach(el => el.classList.remove('selected'));
+          updateProgress();
+        }, 1500);
+
+      } catch (error) {
+        console.error('Submit error:', error);
+        showToast('❌ Lỗi khi gửi! Thử lại sau', '');
+      } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+      }
+    }
+
+    // Format summary for clipboard
+    function formatSummary(data) {
+      let s = `📨 HDDV REQUEST\n━━━━━━━━━━━━━━\n`;
+      s += `👤 ${data.name} (${data.team}) - ${data.email}\n\n`;
+      s += `🎪 ${data.eventName}\n`;
+      s += `   BTC: ${data.organizer}\n`;
+      s += `   Loại: ${data.eventType} | Ưu tiên: ${data.priority}\n`;
+      s += `   Ngày: ${data.eventDate} | ${data.venue || 'TBD'}\n`;
+      if (data.capacity) s += `   Quy mô: ${data.capacity} vé\n`;
+      s += `\n📎 Link: ${data.eventLink}\n`;
+      if (data.workingFile) s += `   Working file: ${data.workingFile}\n`;
+      if (data.presale) s += `🎫 Presale: ${data.presaleDate || 'TBD'}\n`;
+      if (data.earlybird) s += `🎫 Early Bird: ${data.earlybirdDate || 'TBD'}\n`;
+      if (data.generalSale) s += `🎫 General Sale: ${data.generalSaleDate || 'TBD'}\n`;
+      s += `\n📅 Mở bán: ${data.saleDate}\n`;
+      return s;
+    }
+
+    // Reset
+    function resetForm() {
+      if (!confirm('Xoá toàn bộ form?')) return;
+      document.getElementById('hddvForm').reset();
+      document.querySelectorAll('.checkbox-item.checked').forEach(el => el.classList.remove('checked'));
+      document.querySelectorAll('.conditional.show').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('.chip.selected').forEach(el => el.classList.remove('selected'));
+      updateProgress();
+      showToast('🗑 Đã xoá form');
+    }
+
+    // Init
+    updateProgress();
+  </script>
+</body>
+</html>
